@@ -8,6 +8,9 @@ from rest_framework import status
 from .models import TodoList
 from .serializers import TodoListSerializer
 from rest_framework.decorators import api_view
+from django.core import serializers
+from rest_framework.response import Response
+
 
 # Create your views here.
 
@@ -15,9 +18,14 @@ from rest_framework.decorators import api_view
 def index(request):
     if request.method == 'GET':
         todos = TodoList.objects.all()
-        print(type(todos[0].due))
-        tasks = [("id : "+ str(i.id), "task name : "+i.task, "priority : "+ str(i.priority), "due date : " + str(i.due)) for i in todos]
-        return JsonResponse({"task list" : tasks})
+        serializer = TodoListSerializer(todos, many=True)
+        # print(type(todos[0].due))
+        # tasks = [("id : "+ str(i.id), "task name : "+i.task, "priority : "+ str(i.priority), "due date : " + str(i.due)) for i in todos]
+        # for task in todos:
+        #     serialized_obj = serializers.serialize('json', [ task, ])
+        #     print(serialized_obj)
+        # return JsonResponse({"task list" : tasks})
+        return Response(serializer.data)
     elif request.method == 'POST':
         todo_data = JSONParser().parse(request)
         todo_serializer = TodoListSerializer(data=todo_data)
