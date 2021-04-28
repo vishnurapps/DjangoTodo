@@ -14,8 +14,8 @@ from rest_framework.response import Response
 
 # Create your views here.
 
-@api_view(['GET', 'POST', 'DELETE'])
-def index(request):
+@api_view(['GET', 'POST'])
+def all(request):
     if request.method == 'GET':
         todos = TodoList.objects.all()
         serializer = TodoListSerializer(todos, many=True)
@@ -26,9 +26,5 @@ def index(request):
             todo_serializer.save()
             return Response(todo_serializer.data, status=status.HTTP_201_CREATED) 
         return Response(todo_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    elif request.method == 'DELETE':
-        print(request.data['id'])
-        print(type(request.data['id']))
-        todos = TodoList.objects.get(id=request.data['id'])
-        TodoList.objects.filter(id=request.data['id']).delete()
-        return JsonResponse({"deleted":["id : "+str(todos.id), "task : "+todos.task, "priority : "+str(todos.priority), "due data : "+str(todos.due)]})
+
+
