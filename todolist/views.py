@@ -1,15 +1,10 @@
-from django.shortcuts import render
-from django.http import JsonResponse
-
-from django.http.response import JsonResponse
-from rest_framework.parsers import JSONParser 
-from rest_framework import status
- 
 from .models import TodoList
 from .serializers import TodoListSerializer
-from rest_framework.decorators import api_view
-from django.core import serializers
+from rest_framework import status
 from rest_framework.response import Response
+
+from rest_framework.decorators import api_view
+
 
 
 # Create your views here.
@@ -35,7 +30,7 @@ def specific(request, pk, format=None):
     """
     try:
         todo = TodoList.objects.get(pk=pk)
-    except todo.DoesNotExist:
+    except TodoList.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
